@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 
 export default function ReadingAssistApp() {
   const [text, setText] = useState("");
-  const [words, setWords] = useState<string[]>([]);
+  //const [words, setWords] = useState<string[]>([]);
   const [filteredWords, setFilteredWords] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isReading, setIsReading] = useState(false);
   const [speed, setSpeed] = useState(2000);
   const [showInput, setShowInput] = useState(true);
   const [showOutput, setShowOutput] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+
 
   useEffect(() => {
     let interval: ReturnType<typeof setTimeout> | null = null;
@@ -32,7 +34,7 @@ export default function ReadingAssistApp() {
   const startReading = () => {
     const allWords = text.split(/(\s+)/);
     const nonEmptyWords = allWords.filter(word => word.trim() !== "");
-    setWords(allWords);
+    //setWords(allWords);
     setFilteredWords(nonEmptyWords);
     setCurrentIndex(0);
     setIsReading(true);
@@ -43,11 +45,13 @@ export default function ReadingAssistApp() {
   const pauseReading = () => {
     setIsReading(false);
     setShowInput(true);
+    setShowResume(true);
   };
 
   const resumeReading = () => {
     setIsReading(true);
     setShowInput(false);
+    setShowResume(false);
   };
 
   const stopReading = () => {
@@ -58,7 +62,7 @@ export default function ReadingAssistApp() {
   };
 
   useEffect(() => {
-    setWords(text.split(/(\s+)/));
+    //setWords(text.split(/(\s+)/));
     setFilteredWords(text.split(/(\s+)/).filter(word => word.trim() !== ""));
   }, [text]);
 
@@ -80,7 +84,7 @@ export default function ReadingAssistApp() {
       )}
       {showOutput && (
         <div className="mt-8 w-full max-w-2xl text-center bg-white rounded-lg border-2 shadow p-6">
-          <div className="text-8xl font-bold text-black min-h-[150px] flex items-center justify-center">
+          <div className="text-9xl font-bold text-black min-h-[150px] flex items-center justify-center">
             {currentIndex >= 0 && currentIndex < filteredWords.length ? filteredWords[currentIndex] : ""}
           </div>
         </div>
@@ -88,7 +92,9 @@ export default function ReadingAssistApp() {
       <div className="flex gap-4 text-2xl mt-4">
         <Button className="px-6 py-3 text-lg bg-blue-700 text-white" onClick={startReading} disabled={!text.trim()}>Start</Button>
         <Button className="px-6 py-3 text-lg bg-yellow-600 text-white" onClick={pauseReading} disabled={!text.trim()}>Pause</Button>
-        <Button className="px-6 py-3 text-lg bg-green-600 text-white" onClick={resumeReading} disabled={!text.trim()}>Resume</Button>
+        {showResume && (
+          <Button className="px-6 py-3 text-lg bg-green-600 text-white" onClick={resumeReading} disabled={!text.trim()}>Resume</Button>
+        )}
         <Button className="px-6 py-3 text-lg bg-red-700 text-white" onClick={stopReading} disabled={!text.trim()}>Stop</Button>
       </div>
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow border-2 border-gray-500 mt-4 text-xl">
